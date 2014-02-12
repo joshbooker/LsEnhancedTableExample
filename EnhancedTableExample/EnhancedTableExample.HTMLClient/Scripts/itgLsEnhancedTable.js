@@ -78,26 +78,19 @@ var itgLs = itgLs || {};
 		me.sortPropertyName = params.sortPropertyName;
 		me.sortAscendingPropertyName = params.sortAscendingPropertyName;
 		
-		// Set up our dataBinds for updating the filter text
-		for (var i = 0; i < me.filterFields.length; i++) {
-
-			me.filterFields[i].dataBind('value', function () {
-				me.updateFilterText(me.filterFields, me.filterText);
-			});
-
-		}
 
 		// Get our two buttons and set the onclicks
 		var filterButtonElement = $(me.filterButton._view._container).find('[data-role="button"]');
 		var clearFilterButtonElement = $(me.clearFilterButton._view._container).find('[data-role="button"]');
 
 		$(filterButtonElement).on('click', function () {
-			me.toggleFilterVisibility(me.filterFieldLayout, me.clearFilterButton, me.filterText);
+			me.updateFilterText();
+			me.toggleFilterVisibility();
 		});
 
 		$(clearFilterButtonElement).on('click', function () {
-			me.clearFilter(me.filterFields, me.filterText);
-			me.toggleFilterVisibility(me.filterFieldLayout, me.clearFilterButton, me.filterText);
+			me.clearFilter();
+			me.toggleFilterVisibility();
 		});
 
 
@@ -205,7 +198,7 @@ var itgLs = itgLs || {};
 			var fieldValue = me.filterFields[i].value;
 
 			// Add to create our big string
-			result += fieldValue === undefined || fieldValue === "" ? "" : " -- " + displayName + ": " + fieldValue;
+			result += fieldValue === undefined || fieldValue == null || fieldValue === "" ? "" : " -- " + displayName + ": " + fieldValue;
 
 		}
 
