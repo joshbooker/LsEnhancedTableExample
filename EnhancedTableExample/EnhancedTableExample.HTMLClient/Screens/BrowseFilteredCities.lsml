@@ -161,27 +161,23 @@
                   </ContentItem.DataSource>
                 </ContentItem>
                 <ContentItem
-                  Name="State"
-                  Kind="Details"
-                  DataType="State">
+                  Name="StateName"
+                  Kind="Value"
+                  DataType=":String">
+                  <ContentItem.Attributes>
+                    <DisplayName
+                      Value="State Name" />
+                  </ContentItem.Attributes>
                   <ContentItem.DataSource>
                     <ScreenExpressionTree>
                       <ChainExpression>
                         <MemberExpression
                           Member="City/Properties[State]" />
+                        <MemberExpression
+                          Member="Name" />
                       </ChainExpression>
                     </ScreenExpressionTree>
                   </ContentItem.DataSource>
-                  <ContentItem
-                    Name="RowTemplate1"
-                    Kind="Details"
-                    DataType="State">
-                    <ContentItem.DataSource>
-                      <ScreenExpressionTree>
-                        <ChainExpression />
-                      </ScreenExpressionTree>
-                    </ContentItem.DataSource>
-                  </ContentItem>
                 </ContentItem>
               </ContentItem>
               <ContentItem.PropertySources>
@@ -341,27 +337,23 @@
                   </ContentItem.DataSource>
                 </ContentItem>
                 <ContentItem
-                  Name="State2"
-                  Kind="Details"
-                  DataType="State">
+                  Name="StateName2"
+                  Kind="Value"
+                  DataType=":String">
+                  <ContentItem.Attributes>
+                    <DisplayName
+                      Value="State Name" />
+                  </ContentItem.Attributes>
                   <ContentItem.DataSource>
                     <ScreenExpressionTree>
                       <ChainExpression>
                         <MemberExpression
                           Member="City/Properties[State]" />
+                        <MemberExpression
+                          Member="Name" />
                       </ChainExpression>
                     </ScreenExpressionTree>
                   </ContentItem.DataSource>
-                  <ContentItem
-                    Name="State3"
-                    Kind="Details"
-                    DataType="State">
-                    <ContentItem.DataSource>
-                      <ScreenExpressionTree>
-                        <ChainExpression />
-                      </ScreenExpressionTree>
-                    </ContentItem.DataSource>
-                  </ContentItem>
                 </ContentItem>
               </ContentItem>
             </ContentItem>

@@ -10,6 +10,8 @@
       Namespace="LightSwitchApplication" />
     <Partial
       IsPrimary="True" />
+    <HomeScreen
+      Value="BrowseFilteredCities" />
   </Application.Attributes>
   <EntityContainerGroup
     Name="DataWorkspace">

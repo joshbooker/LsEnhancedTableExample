@@ -110,7 +110,7 @@ var itgLs = itgLs || {};
 
 			// Get the actual name of the data field of this table column, which will be our sort property
 			// Using this method will allow multiple tables on the same screen
-			var propertyName = headerContentItem.model.dataSource.member.name;
+			var propertyName = headerContentItem.bindingPath.substring(5);
 
 			// Add a click handler for each table header
 			$(this).on("click", function () {
