@@ -21,49 +21,224 @@
           View="Microsoft.LightSwitch.MobileWeb:TabPages">
           <ContentItem
             Name="CityList"
-            Kind="Group">
+            Kind="Group"
+            View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
             <ContentItem
-              Name="FilterButtonLayout"
-              Kind="Group"
-              View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
+              Name="Group"
+              Kind="Group">
+              <ContentItem.Attributes>
+                <DisplayName
+                  Value="Batch" />
+              </ContentItem.Attributes>
               <ContentItem
-                Name="FilterButton"
-                Kind="Command">
-                <ContentItem.Attributes>
-                  <DisplayName
-                    Value="Filter" />
-                </ContentItem.Attributes>
+                Name="FilterButtonLayout1"
+                Kind="Group"
+                View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
+                <ContentItem
+                  Name="ExecuteButton1"
+                  Kind="Command">
+                  <ContentItem.Attributes>
+                    <DisplayName
+                      Value="Execute" />
+                  </ContentItem.Attributes>
+                  <ContentItem.PropertySources>
+                    <ControlPropertySource
+                      Property="Microsoft.LightSwitch.MobileWeb:RootControl/Properties[Tap]">
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <CallExpression
+                            Target="BrowseFilteredCities/Methods[ExecuteButton1_Tap]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ControlPropertySource>
+                    <ControlPropertySource
+                      Property="Microsoft.LightSwitch.MobileWeb:RootControl/Properties[MinWidth]">
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <ConstantExpression
+                            Value="30"
+                            ResultType=":Double" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ControlPropertySource>
+                  </ContentItem.PropertySources>
+                </ContentItem>
+                <ContentItem
+                  Name="ShowFilterButton1"
+                  Kind="Command">
+                  <ContentItem.Attributes>
+                    <DisplayName
+                      Value="Show" />
+                  </ContentItem.Attributes>
+                  <ContentItem.PropertySources>
+                    <ControlPropertySource
+                      Property="Microsoft.LightSwitch.MobileWeb:RootControl/Properties[Tap]">
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <CallExpression
+                            Target="BrowseFilteredCities/Methods[ShowFilterButton1_Tap]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ControlPropertySource>
+                  </ContentItem.PropertySources>
+                </ContentItem>
+                <ContentItem
+                  Name="ClearSortAndFilterButton1"
+                  Kind="Command">
+                  <ContentItem.Attributes>
+                    <DisplayName
+                      Value="Clear" />
+                  </ContentItem.Attributes>
+                  <ContentItem.PropertySources>
+                    <ControlPropertySource
+                      Property="Microsoft.LightSwitch.MobileWeb:RootControl/Properties[Tap]">
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <CallExpression
+                            Target="BrowseFilteredCities/Methods[ClearSortAndFilterButton1_Tap]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ControlPropertySource>
+                  </ContentItem.PropertySources>
+                </ContentItem>
               </ContentItem>
               <ContentItem
-                Name="ClearFilterButton"
+                Name="FilterFieldLayout1"
                 IsHidden="True"
-                Kind="Command">
-                <ContentItem.Attributes>
-                  <DisplayName
-                    Value="Clear" />
-                </ContentItem.Attributes>
+                Kind="Group"
+                View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
+                <ContentItem
+                  Name="pName"
+                  Kind="Value"
+                  DataType=":String?"
+                  View="Microsoft.LightSwitch.MobileWeb:TextBox">
+                  <ContentItem.DataSource>
+                    <ScreenExpressionTree>
+                      <ChainExpression>
+                        <MemberExpression
+                          Member="BrowseFilteredCities/Properties[pName]" />
+                      </ChainExpression>
+                    </ScreenExpressionTree>
+                  </ContentItem.DataSource>
+                </ContentItem>
+                <ContentItem
+                  Name="pState_Name"
+                  Kind="Value"
+                  DataType=":String?"
+                  View="Microsoft.LightSwitch.MobileWeb:TextBox">
+                  <ContentItem.DataSource>
+                    <ScreenExpressionTree>
+                      <ChainExpression>
+                        <MemberExpression
+                          Member="BrowseFilteredCities/Properties[pState_Name]" />
+                      </ChainExpression>
+                    </ScreenExpressionTree>
+                  </ContentItem.DataSource>
+                </ContentItem>
               </ContentItem>
               <ContentItem
-                Name="FilterText"
-                IsHidden="True"
-                Kind="Value"
-                DataType=":String?">
+                Name="FilteredCities1"
+                Kind="Collection"
+                DataType="CollectionView$City"
+                View="Microsoft.LightSwitch.MobileWeb:Table">
+                <ContentItem.Attributes>
+                  <DisplayName
+                    Value="Batch Execution" />
+                </ContentItem.Attributes>
                 <ContentItem.DataSource>
                   <ScreenExpressionTree>
                     <ChainExpression>
                       <MemberExpression
-                        Member="BrowseFilteredCities/Properties[FilterText]" />
+                        Member="BrowseFilteredCities/Properties[FilteredCities1]" />
                     </ChainExpression>
                   </ScreenExpressionTree>
                 </ContentItem.DataSource>
+                <ContentItem
+                  Name="RowTemplate"
+                  Kind="Details"
+                  DataType="City">
+                  <ContentItem.DataSource>
+                    <ScreenExpressionTree>
+                      <ChainExpression />
+                    </ScreenExpressionTree>
+                  </ContentItem.DataSource>
+                  <ContentItem
+                    Name="Name"
+                    Kind="Value"
+                    DataType=":String">
+                    <ContentItem.DataSource>
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <MemberExpression
+                            Member="City/Properties[Name]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ContentItem.DataSource>
+                  </ContentItem>
+                  <ContentItem
+                    Name="Population"
+                    Kind="Value"
+                    DataType=":Int32">
+                    <ContentItem.DataSource>
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <MemberExpression
+                            Member="City/Properties[Population]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ContentItem.DataSource>
+                  </ContentItem>
+                  <ContentItem
+                    Name="StateName"
+                    Kind="Value"
+                    DataType=":String">
+                    <ContentItem.Attributes>
+                      <DisplayName
+                        Value="State Name" />
+                    </ContentItem.Attributes>
+                    <ContentItem.DataSource>
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <MemberExpression
+                            Member="City/Properties[State]" />
+                          <MemberExpression
+                            Member="Name" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ContentItem.DataSource>
+                  </ContentItem>
+                </ContentItem>
                 <ContentItem.PropertySources>
                   <ControlPropertySource
-                    Property="Microsoft.LightSwitch.MobileWeb:RootControl/Properties[AttachedLabelPosition]">
+                    Property="Microsoft.LightSwitch.MobileWeb:RootCollectionControl/Properties[ItemTap]">
+                    <ScreenExpressionTree>
+                      <ChainExpression>
+                        <CallExpression
+                          Target="!module/Methods[showAddEditCity]">
+                          <CallExpression.Attributes>
+                            <AssociatedCollection
+                              Collection="BrowseFilteredCities/Properties[FilteredCities1]" />
+                          </CallExpression.Attributes>
+                          <ArgumentExpression
+                            Parameter="City">
+                            <ChainExpression>
+                              <MemberExpression
+                                Member="BrowseFilteredCities/Properties[FilteredCities1]" />
+                              <MemberExpression
+                                Member="selectedItem" />
+                            </ChainExpression>
+                          </ArgumentExpression>
+                        </CallExpression>
+                      </ChainExpression>
+                    </ScreenExpressionTree>
+                  </ControlPropertySource>
+                  <ControlPropertySource
+                    Property="Microsoft.LightSwitch.MobileWeb:RootCollectionControl/Properties[ShowHeader]">
                     <ScreenExpressionTree>
                       <ChainExpression>
                         <ConstantExpression
-                          Value="None"
-                          ResultType=":String" />
+                          Value="True"
+                          ResultType=":Boolean" />
                       </ChainExpression>
                     </ScreenExpressionTree>
                   </ControlPropertySource>
@@ -71,290 +246,196 @@
               </ContentItem>
             </ContentItem>
             <ContentItem
-              Name="FilterFieldLayout"
-              IsHidden="True"
-              Kind="Group"
-              View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
+              Name="Group1"
+              Kind="Group">
+              <ContentItem.Attributes>
+                <DisplayName
+                  Value="Immediate" />
+              </ContentItem.Attributes>
               <ContentItem
-                Name="CityName"
-                Kind="Value"
-                DataType=":String?"
-                View="Microsoft.LightSwitch.MobileWeb:TextBox">
-                <ContentItem.Attributes>
-                  <DisplayName
-                    Value="City" />
-                </ContentItem.Attributes>
-                <ContentItem.DataSource>
-                  <ScreenExpressionTree>
-                    <ChainExpression>
-                      <MemberExpression
-                        Member="BrowseFilteredCities/Properties[CityName]" />
-                    </ChainExpression>
-                  </ScreenExpressionTree>
-                </ContentItem.DataSource>
-              </ContentItem>
-              <ContentItem
-                Name="CityState"
-                Kind="Value"
-                DataType=":String?"
-                View="Microsoft.LightSwitch.MobileWeb:TextBox">
-                <ContentItem.Attributes>
-                  <DisplayName
-                    Value="State" />
-                </ContentItem.Attributes>
-                <ContentItem.DataSource>
-                  <ScreenExpressionTree>
-                    <ChainExpression>
-                      <MemberExpression
-                        Member="BrowseFilteredCities/Properties[CityState]" />
-                    </ChainExpression>
-                  </ScreenExpressionTree>
-                </ContentItem.DataSource>
-              </ContentItem>
-            </ContentItem>
-            <ContentItem
-              Name="City"
-              Kind="Collection"
-              DataType="CollectionView$City"
-              View="Microsoft.LightSwitch.MobileWeb:Table">
-              <ContentItem.DataSource>
-                <ScreenExpressionTree>
-                  <ChainExpression>
-                    <MemberExpression
-                      Member="BrowseFilteredCities/Properties[FilteredCities]" />
-                  </ChainExpression>
-                </ScreenExpressionTree>
-              </ContentItem.DataSource>
-              <ContentItem
-                Name="RowTemplate"
-                Kind="Details"
-                DataType="City">
-                <ContentItem.DataSource>
-                  <ScreenExpressionTree>
-                    <ChainExpression />
-                  </ScreenExpressionTree>
-                </ContentItem.DataSource>
+                Name="FilterButtonLayout2"
+                Kind="Group"
+                View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
                 <ContentItem
-                  Name="Name"
-                  Kind="Value"
-                  DataType=":String">
-                  <ContentItem.DataSource>
-                    <ScreenExpressionTree>
-                      <ChainExpression>
-                        <MemberExpression
-                          Member="City/Properties[Name]" />
-                      </ChainExpression>
-                    </ScreenExpressionTree>
-                  </ContentItem.DataSource>
-                </ContentItem>
-                <ContentItem
-                  Name="Population"
-                  Kind="Value"
-                  DataType=":Int32">
-                  <ContentItem.DataSource>
-                    <ScreenExpressionTree>
-                      <ChainExpression>
-                        <MemberExpression
-                          Member="City/Properties[Population]" />
-                      </ChainExpression>
-                    </ScreenExpressionTree>
-                  </ContentItem.DataSource>
-                </ContentItem>
-                <ContentItem
-                  Name="StateName"
-                  Kind="Value"
-                  DataType=":String">
+                  Name="ShowFilterButton2"
+                  Kind="Command">
                   <ContentItem.Attributes>
                     <DisplayName
-                      Value="State Name" />
+                      Value="Show" />
                   </ContentItem.Attributes>
+                  <ContentItem.PropertySources>
+                    <ControlPropertySource
+                      Property="Microsoft.LightSwitch.MobileWeb:RootControl/Properties[Tap]">
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <CallExpression
+                            Target="BrowseFilteredCities/Methods[ShowFilterButton2_Tap]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ControlPropertySource>
+                  </ContentItem.PropertySources>
+                </ContentItem>
+                <ContentItem
+                  Name="ClearSortAndFilterButton2"
+                  Kind="Command">
+                  <ContentItem.Attributes>
+                    <DisplayName
+                      Value="Clear" />
+                  </ContentItem.Attributes>
+                  <ContentItem.PropertySources>
+                    <ControlPropertySource
+                      Property="Microsoft.LightSwitch.MobileWeb:RootControl/Properties[Tap]">
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <CallExpression
+                            Target="BrowseFilteredCities/Methods[ClearSortAndFilterButton2_Tap]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ControlPropertySource>
+                  </ContentItem.PropertySources>
+                </ContentItem>
+              </ContentItem>
+              <ContentItem
+                Name="FilterFieldLayout2"
+                IsHidden="True"
+                Kind="Group"
+                View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
+                <ContentItem
+                  Name="Name1"
+                  Kind="Value"
+                  DataType=":String?"
+                  View="Microsoft.LightSwitch.MobileWeb:TextBox">
                   <ContentItem.DataSource>
                     <ScreenExpressionTree>
                       <ChainExpression>
                         <MemberExpression
-                          Member="City/Properties[State]" />
+                          Member="BrowseFilteredCities/Properties[Name]" />
+                      </ChainExpression>
+                    </ScreenExpressionTree>
+                  </ContentItem.DataSource>
+                </ContentItem>
+                <ContentItem
+                  Name="State"
+                  Kind="Value"
+                  DataType=":String?"
+                  View="Microsoft.LightSwitch.MobileWeb:TextBox">
+                  <ContentItem.DataSource>
+                    <ScreenExpressionTree>
+                      <ChainExpression>
                         <MemberExpression
-                          Member="Name" />
+                          Member="BrowseFilteredCities/Properties[State]" />
                       </ChainExpression>
                     </ScreenExpressionTree>
                   </ContentItem.DataSource>
                 </ContentItem>
               </ContentItem>
-              <ContentItem.PropertySources>
-                <ControlPropertySource
-                  Property="Microsoft.LightSwitch.MobileWeb:RootCollectionControl/Properties[ItemTap]">
-                  <ScreenExpressionTree>
-                    <ChainExpression>
-                      <CallExpression
-                        Target="!module/Methods[showAddEditCity]">
-                        <CallExpression.Attributes>
-                          <AssociatedCollection
-                            Collection="BrowseFilteredCities/Properties[FilteredCities]" />
-                        </CallExpression.Attributes>
-                        <ArgumentExpression
-                          Parameter="City">
-                          <ChainExpression>
-                            <MemberExpression
-                              Member="BrowseFilteredCities/Properties[FilteredCities]" />
-                            <MemberExpression
-                              Member="selectedItem" />
-                          </ChainExpression>
-                        </ArgumentExpression>
-                      </CallExpression>
-                    </ChainExpression>
-                  </ScreenExpressionTree>
-                </ControlPropertySource>
-              </ContentItem.PropertySources>
-            </ContentItem>
-            <ContentItem
-              Name="FilterButtonLayout2"
-              Kind="Group"
-              View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
               <ContentItem
-                Name="FilterButton2"
-                Kind="Command">
+                Name="FilteredCities2"
+                Kind="Collection"
+                DataType="CollectionView$City"
+                View="Microsoft.LightSwitch.MobileWeb:Table">
                 <ContentItem.Attributes>
                   <DisplayName
-                    Value="Filter" />
+                    Value="Immediate Execution" />
                 </ContentItem.Attributes>
-              </ContentItem>
-              <ContentItem
-                Name="ClearFilterButton2"
-                IsHidden="True"
-                Kind="Command">
-                <ContentItem.Attributes>
-                  <DisplayName
-                    Value="Clear" />
-                </ContentItem.Attributes>
-              </ContentItem>
-              <ContentItem
-                Name="FilterText2"
-                IsHidden="True"
-                Kind="Value"
-                DataType=":String?">
                 <ContentItem.DataSource>
                   <ScreenExpressionTree>
                     <ChainExpression>
                       <MemberExpression
-                        Member="BrowseFilteredCities/Properties[FilterText2]" />
+                        Member="BrowseFilteredCities/Properties[FilteredCities2]" />
                     </ChainExpression>
                   </ScreenExpressionTree>
                 </ContentItem.DataSource>
+                <ContentItem
+                  Name="FilteredCities1Template"
+                  Kind="Details"
+                  DataType="City">
+                  <ContentItem.DataSource>
+                    <ScreenExpressionTree>
+                      <ChainExpression />
+                    </ScreenExpressionTree>
+                  </ContentItem.DataSource>
+                  <ContentItem
+                    Name="Name2"
+                    Kind="Value"
+                    DataType=":String">
+                    <ContentItem.DataSource>
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <MemberExpression
+                            Member="City/Properties[Name]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ContentItem.DataSource>
+                  </ContentItem>
+                  <ContentItem
+                    Name="Population1"
+                    Kind="Value"
+                    DataType=":Int32">
+                    <ContentItem.DataSource>
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <MemberExpression
+                            Member="City/Properties[Population]" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ContentItem.DataSource>
+                  </ContentItem>
+                  <ContentItem
+                    Name="StateName2"
+                    Kind="Value"
+                    DataType=":String">
+                    <ContentItem.Attributes>
+                      <DisplayName
+                        Value="State Name" />
+                    </ContentItem.Attributes>
+                    <ContentItem.DataSource>
+                      <ScreenExpressionTree>
+                        <ChainExpression>
+                          <MemberExpression
+                            Member="City/Properties[State]" />
+                          <MemberExpression
+                            Member="Name" />
+                        </ChainExpression>
+                      </ScreenExpressionTree>
+                    </ContentItem.DataSource>
+                  </ContentItem>
+                </ContentItem>
                 <ContentItem.PropertySources>
                   <ControlPropertySource
-                    Property="Microsoft.LightSwitch.MobileWeb:RootControl/Properties[AttachedLabelPosition]">
+                    Property="Microsoft.LightSwitch.MobileWeb:RootCollectionControl/Properties[ShowHeader]">
                     <ScreenExpressionTree>
                       <ChainExpression>
                         <ConstantExpression
-                          Value="None"
-                          ResultType=":String" />
+                          Value="True"
+                          ResultType=":Boolean" />
+                      </ChainExpression>
+                    </ScreenExpressionTree>
+                  </ControlPropertySource>
+                  <ControlPropertySource
+                    Property="Microsoft.LightSwitch.MobileWeb:RootCollectionControl/Properties[ItemTap]">
+                    <ScreenExpressionTree>
+                      <ChainExpression>
+                        <CallExpression
+                          Target="!module/Methods[showAddEditCity]">
+                          <CallExpression.Attributes>
+                            <AssociatedCollection
+                              Collection="BrowseFilteredCities/Properties[FilteredCities2]" />
+                          </CallExpression.Attributes>
+                          <ArgumentExpression
+                            Parameter="City">
+                            <ChainExpression>
+                              <MemberExpression
+                                Member="BrowseFilteredCities/Properties[FilteredCities2]" />
+                              <MemberExpression
+                                Member="selectedItem" />
+                            </ChainExpression>
+                          </ArgumentExpression>
+                        </CallExpression>
                       </ChainExpression>
                     </ScreenExpressionTree>
                   </ControlPropertySource>
                 </ContentItem.PropertySources>
-              </ContentItem>
-            </ContentItem>
-            <ContentItem
-              Name="FilterFieldLayout2"
-              IsHidden="True"
-              Kind="Group"
-              View="Microsoft.LightSwitch.MobileWeb:ColumnsLayout">
-              <ContentItem
-                Name="Name1"
-                Kind="Value"
-                DataType=":String?"
-                View="Microsoft.LightSwitch.MobileWeb:TextBox">
-                <ContentItem.DataSource>
-                  <ScreenExpressionTree>
-                    <ChainExpression>
-                      <MemberExpression
-                        Member="BrowseFilteredCities/Properties[Name]" />
-                    </ChainExpression>
-                  </ScreenExpressionTree>
-                </ContentItem.DataSource>
-              </ContentItem>
-              <ContentItem
-                Name="State1"
-                Kind="Value"
-                DataType=":String?"
-                View="Microsoft.LightSwitch.MobileWeb:TextBox">
-                <ContentItem.DataSource>
-                  <ScreenExpressionTree>
-                    <ChainExpression>
-                      <MemberExpression
-                        Member="BrowseFilteredCities/Properties[State]" />
-                    </ChainExpression>
-                  </ScreenExpressionTree>
-                </ContentItem.DataSource>
-              </ContentItem>
-            </ContentItem>
-            <ContentItem
-              Name="FilteredCities1"
-              Kind="Collection"
-              DataType="CollectionView$City"
-              View="Microsoft.LightSwitch.MobileWeb:Table">
-              <ContentItem.DataSource>
-                <ScreenExpressionTree>
-                  <ChainExpression>
-                    <MemberExpression
-                      Member="BrowseFilteredCities/Properties[FilteredCities1]" />
-                  </ChainExpression>
-                </ScreenExpressionTree>
-              </ContentItem.DataSource>
-              <ContentItem
-                Name="FilteredCities1Template"
-                Kind="Details"
-                DataType="City">
-                <ContentItem.DataSource>
-                  <ScreenExpressionTree>
-                    <ChainExpression />
-                  </ScreenExpressionTree>
-                </ContentItem.DataSource>
-                <ContentItem
-                  Name="Name2"
-                  Kind="Value"
-                  DataType=":String">
-                  <ContentItem.DataSource>
-                    <ScreenExpressionTree>
-                      <ChainExpression>
-                        <MemberExpression
-                          Member="City/Properties[Name]" />
-                      </ChainExpression>
-                    </ScreenExpressionTree>
-                  </ContentItem.DataSource>
-                </ContentItem>
-                <ContentItem
-                  Name="Population1"
-                  Kind="Value"
-                  DataType=":Int32">
-                  <ContentItem.DataSource>
-                    <ScreenExpressionTree>
-                      <ChainExpression>
-                        <MemberExpression
-                          Member="City/Properties[Population]" />
-                      </ChainExpression>
-                    </ScreenExpressionTree>
-                  </ContentItem.DataSource>
-                </ContentItem>
-                <ContentItem
-                  Name="StateName2"
-                  Kind="Value"
-                  DataType=":String">
-                  <ContentItem.Attributes>
-                    <DisplayName
-                      Value="State Name" />
-                  </ContentItem.Attributes>
-                  <ContentItem.DataSource>
-                    <ScreenExpressionTree>
-                      <ChainExpression>
-                        <MemberExpression
-                          Member="City/Properties[State]" />
-                        <MemberExpression
-                          Member="Name" />
-                      </ChainExpression>
-                    </ScreenExpressionTree>
-                  </ContentItem.DataSource>
-                </ContentItem>
               </ContentItem>
             </ContentItem>
             <ContentItem.CommandItems>
@@ -370,11 +451,21 @@
                           Target="!module/Methods[showAddEditCity]">
                           <CallExpression.Attributes>
                             <AssociatedCollection
-                              Collection="BrowseFilteredCities/Properties[FilteredCities]" />
+                              Collection="BrowseFilteredCities/Properties[FilteredCities1]" />
                             <CreateNewEntity
                               TargetParameter="!module/Methods[showAddEditCity]/Parameters[City]" />
                           </CallExpression.Attributes>
                         </CallExpression>
+                      </ChainExpression>
+                    </ScreenExpressionTree>
+                  </ControlPropertySource>
+                  <ControlPropertySource
+                    Property="Microsoft.LightSwitch.MobileWeb:RootCommand/Properties[Icon]">
+                    <ScreenExpressionTree>
+                      <ChainExpression>
+                        <ConstantExpression
+                          Value="msls-add"
+                          ResultType=":String" />
                       </ChainExpression>
                     </ScreenExpressionTree>
                   </ControlPropertySource>
@@ -424,78 +515,18 @@
           Name="dialogName"
           ParameterType=":String" />
       </ScreenMethod>
+      <ScreenMethod
+        Name="ExecuteButton1_Tap" />
+      <ScreenMethod
+        Name="ShowFilterButton1_Tap" />
+      <ScreenMethod
+        Name="ShowFilterButton2_Tap" />
+      <ScreenMethod
+        Name="ClearSortAndFilterButton1_Tap" />
+      <ScreenMethod
+        Name="ClearSortAndFilterButton2_Tap" />
     </Screen.Methods>
     <Screen.Properties>
-      <ScreenCollectionProperty
-        Name="FilteredCities"
-        PageSize="45"
-        PropertyType="CollectionView$City">
-        <ScreenCollectionProperty.Query>
-          <ScreenQueryDefinition
-            Name="FilteredCitiesQuery"
-            ReturnType="City*">
-            <ScreenQueryDefinition.FilterExpression>
-              <QueryFilterExpressionTree />
-            </ScreenQueryDefinition.FilterExpression>
-            <ScreenQueryDefinition.Source>
-              <QuerySourceExpressionTree>
-                <MemberExpression
-                  Member="ApplicationData/Members[FilteredCities]" />
-              </QuerySourceExpressionTree>
-            </ScreenQueryDefinition.Source>
-          </ScreenQueryDefinition>
-        </ScreenCollectionProperty.Query>
-        <ScreenExpressionTree>
-          <ChainExpression>
-            <CallExpression
-              Target="BrowseFilteredCities/Properties[FilteredCities]/Query">
-              <ArgumentExpression
-                Parameter="SortField">
-                <ChainExpression>
-                  <MemberExpression
-                    Member="BrowseFilteredCities/Properties[CitySortField]" />
-                </ChainExpression>
-              </ArgumentExpression>
-              <ArgumentExpression
-                Parameter="SortAscending">
-                <ChainExpression>
-                  <MemberExpression
-                    Member="BrowseFilteredCities/Properties[CitySortAscending]" />
-                </ChainExpression>
-              </ArgumentExpression>
-              <ArgumentExpression
-                Parameter="Name">
-                <ChainExpression>
-                  <MemberExpression
-                    Member="BrowseFilteredCities/Properties[CityName]" />
-                </ChainExpression>
-              </ArgumentExpression>
-              <ArgumentExpression
-                Parameter="State">
-                <ChainExpression>
-                  <MemberExpression
-                    Member="BrowseFilteredCities/Properties[CityState]" />
-                </ChainExpression>
-              </ArgumentExpression>
-            </CallExpression>
-          </ChainExpression>
-        </ScreenExpressionTree>
-      </ScreenCollectionProperty>
-      <ScreenProperty
-        Name="CitySortField"
-        PropertyType=":String?" />
-      <ScreenProperty
-        Name="CitySortAscending"
-        PropertyType=":Boolean?" />
-      <ScreenProperty
-        Name="CityName"
-        PropertyType=":String?" />
-      <ScreenProperty
-        Name="CityState"
-        PropertyType=":String?" />
-      <ScreenProperty
-        Name="FilterText"
-        PropertyType=":String?" />
       <ScreenCollectionProperty
         Name="FilteredCities1"
         PageSize="45"
@@ -520,19 +551,72 @@
             <CallExpression
               Target="BrowseFilteredCities/Properties[FilteredCities1]/Query">
               <ArgumentExpression
-                Parameter="SortField">
+                Parameter="Name" />
+              <ArgumentExpression
+                Parameter="State" />
+              <ArgumentExpression
+                Parameter="SortString">
                 <ChainExpression>
                   <MemberExpression
-                    Member="BrowseFilteredCities/Properties[SortField]" />
+                    Member="BrowseFilteredCities/Properties[SortString1]" />
                 </ChainExpression>
               </ArgumentExpression>
               <ArgumentExpression
-                Parameter="SortAscending">
+                Parameter="FilterString">
                 <ChainExpression>
                   <MemberExpression
-                    Member="BrowseFilteredCities/Properties[SortAscending]" />
+                    Member="BrowseFilteredCities/Properties[FilterString1]" />
                 </ChainExpression>
               </ArgumentExpression>
+            </CallExpression>
+          </ChainExpression>
+        </ScreenExpressionTree>
+      </ScreenCollectionProperty>
+      <ScreenProperty
+        Name="SortString1"
+        PropertyType=":String?" />
+      <ScreenProperty
+        Name="FilterString1"
+        PropertyType=":String?" />
+      <ScreenProperty
+        Name="pName"
+        PropertyType=":String?">
+        <ScreenProperty.Attributes>
+          <DisplayName
+            Value="City Name" />
+        </ScreenProperty.Attributes>
+      </ScreenProperty>
+      <ScreenProperty
+        Name="pState_Name"
+        PropertyType=":String?">
+        <ScreenProperty.Attributes>
+          <DisplayName
+            Value="State" />
+        </ScreenProperty.Attributes>
+      </ScreenProperty>
+      <ScreenCollectionProperty
+        Name="FilteredCities2"
+        PageSize="45"
+        PropertyType="CollectionView$City">
+        <ScreenCollectionProperty.Query>
+          <ScreenQueryDefinition
+            Name="FilteredCities2Query"
+            ReturnType="City*">
+            <ScreenQueryDefinition.FilterExpression>
+              <QueryFilterExpressionTree />
+            </ScreenQueryDefinition.FilterExpression>
+            <ScreenQueryDefinition.Source>
+              <QuerySourceExpressionTree>
+                <MemberExpression
+                  Member="ApplicationData/Members[FilteredCities]" />
+              </QuerySourceExpressionTree>
+            </ScreenQueryDefinition.Source>
+          </ScreenQueryDefinition>
+        </ScreenCollectionProperty.Query>
+        <ScreenExpressionTree>
+          <ChainExpression>
+            <CallExpression
+              Target="BrowseFilteredCities/Properties[FilteredCities2]/Query">
               <ArgumentExpression
                 Parameter="Name">
                 <ChainExpression>
@@ -547,16 +631,19 @@
                     Member="BrowseFilteredCities/Properties[State]" />
                 </ChainExpression>
               </ArgumentExpression>
+              <ArgumentExpression
+                Parameter="SortString">
+                <ChainExpression>
+                  <MemberExpression
+                    Member="BrowseFilteredCities/Properties[SortString2]" />
+                </ChainExpression>
+              </ArgumentExpression>
+              <ArgumentExpression
+                Parameter="FilterString" />
             </CallExpression>
           </ChainExpression>
         </ScreenExpressionTree>
       </ScreenCollectionProperty>
-      <ScreenProperty
-        Name="SortField"
-        PropertyType=":String?" />
-      <ScreenProperty
-        Name="SortAscending"
-        PropertyType=":Boolean?" />
       <ScreenProperty
         Name="Name"
         PropertyType=":String?" />
@@ -564,7 +651,7 @@
         Name="State"
         PropertyType=":String?" />
       <ScreenProperty
-        Name="FilterText2"
+        Name="SortString2"
         PropertyType=":String?" />
     </Screen.Properties>
   </Screen>

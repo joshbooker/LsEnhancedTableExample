@@ -58,19 +58,19 @@
         </QuerySourceExpressionTree>
       </QueryOperation.Source>
       <QueryOperationParameter
-        Name="SortField"
-        IsOptional="True"
-        ParameterType=":String?" />
-      <QueryOperationParameter
-        Name="SortAscending"
-        IsOptional="True"
-        ParameterType=":Boolean?" />
-      <QueryOperationParameter
         Name="Name"
         IsOptional="True"
         ParameterType=":String?" />
       <QueryOperationParameter
         Name="State"
+        IsOptional="True"
+        ParameterType=":String?" />
+      <QueryOperationParameter
+        Name="SortString"
+        IsOptional="True"
+        ParameterType=":String?" />
+      <QueryOperationParameter
+        Name="FilterString"
         IsOptional="True"
         ParameterType=":String?" />
     </QueryOperation>

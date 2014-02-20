@@ -1,4 +1,5 @@
-﻿
+﻿/// <reference path="lodash.js" />
+
 // =================================================================================================
 // Based on the work of Kevin Mehlhaff of the LightSwitch Teamp
 // http://blogs.msdn.com/b/lightswitch/archive/2013/11/26/customizing-the-table-control-sortable-by-column-kevin-mehlhaff.aspx
@@ -9,10 +10,13 @@ var itgLs = itgLs || {};
 
 (function () {
 
-	// Create our EnhancedTable class
-	var EnhancedTable = function (params) {
-		this.initialize(params);
+	// Our constructor
+	var EnhancedTable = function (properties) {
+
+		this.initialize(properties);
+
 	};
+
 
 	// Assign class to the itgLs space
 	// ==========================================================================================
@@ -27,25 +31,12 @@ var itgLs = itgLs || {};
 	// ==========================================================================================
 	// ///////////////////////////////////////////////////////////////////////////////////////////
 
+
 	// Check it out... this variable and its incremental value will go across all instances
 	// ==========================================================================================
 	EnhancedTable.counter = 0;
-	EnhancedTable.increment = function() {
+	EnhancedTable.increment = function () {
 		return EnhancedTable.counter++;
-	};
-	
-
-	// Set the up/down arrow graphic for the sorted column
-	// ==========================================================================================
-	// TODO:  Move to CSS Classes? Parameters?
-	EnhancedTable.applySortGraphic = function (element, text, ascending) {
-
-		// Use html entity for up triangle and down triangle respectively
-		var graphic = ascending ? "&#9650;" : "&#9660;";
-
-		// Add the triangle to the header text
-		$(element).html(text + " " + graphic);
-
 	};
 
 
@@ -53,7 +44,7 @@ var itgLs = itgLs || {};
 	// ///////////////////////////////////////////////////////////////////////////////////////////
 	// ==========================================================================================
 	// ==========================================================================================
-	// Instance based variables/methods
+	// Prototype/Instance based variables/methods
 	// ==========================================================================================
 	// ==========================================================================================
 	// ///////////////////////////////////////////////////////////////////////////////////////////
@@ -62,113 +53,202 @@ var itgLs = itgLs || {};
 
 	// Big ol initialize this Enhanced Table, instance based
 	// ==========================================================================================
-	p.initialize = function (params) {
+	p.initialize = function (properties) {
+
+		// Me is the particular instance of this enhanced table control
 		var me = this;
-		me.contentItem = params.contentItem;
-		me.element = $(params.element);
-		me.screen = me.contentItem.screen;
-		me.filterFieldLayout = me.screen.findContentItem(params.filterFieldLayoutName);
+
+		// Obvious... 
+		me.screen = properties.contentItem.screen;
+
+		// Element is the HTML element that contains the table control
+		me.element = $(properties.element);
+
+		// Are we going to be in batch mode or not
+		me.batchMode = properties.batchMode == undefined || properties.batchMode == null ? false : properties.batchMode;
+
+
+		// //////////////////////////////////////////////////////////////////////////////////
+		// ==================================================================================
+		// This part is all for filtering
+		// ==================================================================================
+		// //////////////////////////////////////////////////////////////////////////////////
+
+		// The screen group that contains the fields for filtering
+		me.filterFieldLayout = me.screen.findContentItem(properties.filterFieldLayoutName);
+
+		// Array of all the input controls used for filtering
 		me.filterFields = me.filterFieldLayout.children;
-		me.filterText = me.screen.findContentItem(params.filterTextPropertyName);
-		me.clearFilterButton = me.screen.findContentItem(params.clearFilterButtonName);
-		me.filterButton = me.screen.findContentItem(params.filterButtonName);
 
-		me.initialSortFieldName = params.initialSortFieldName;
-		me.initialSortAscending = params.initialSortAscending !== undefined ? params.initialSortAscending : true;
-		me.sortPropertyName = params.sortPropertyName;
-		me.sortAscendingPropertyName = params.sortAscendingPropertyName;
-		
+		// The name of the screen property that will be used to hold our filter
+		me.filterStringPropertyName = properties.filterStringPropertyName;
 
-		// Get our two buttons and set the onclicks
-		var filterButtonElement = $(me.filterButton._view._container).find('[data-role="button"]');
-		var clearFilterButtonElement = $(me.clearFilterButton._view._container).find('[data-role="button"]');
 
-		$(filterButtonElement).on('click', function () {
-			me.updateFilterText();
-			me.toggleFilterVisibility();
-		});
+		// //////////////////////////////////////////////////////////////////////////////////
+		// ==================================================================================
+		// This next part is all for column sorting
+		// ==================================================================================
+		// //////////////////////////////////////////////////////////////////////////////////
 
-		$(clearFilterButtonElement).on('click', function () {
-			me.clearFilter();
-			me.toggleFilterVisibility();
-		});
+		// The name of the screen property that will be used to hold our sort
+		me.sortStringPropertyName = properties.sortStringPropertyName;
 
+		// List of table headers available for sorting
+		me.tableHeaders = [];
+
+		// Hold our sort string, allows for setting multiple columns and then sort
+		me.sortString = "";
 
 		// Find and loop over each TH (header) element
-		$("th", me.element).each(function (ii) {
+		$("th", me.element).each(function (i) {
 
 			// Get the column header contentItem based on the index
-			var headerContentItem = me.contentItem.children[0].children[ii];
+			var headerContentItem = properties.contentItem.children[0].children[i];
 
 			// We only skip command (button) types, all others get passed for processing
 			if (headerContentItem.kind === "Command") {
 				return;
 			}
 
-			// Add the pointer style
-			$(this).css('cursor', 'pointer');
+			// //////////////////////////////////////////////////////////////////////////////
+			// Initialize our internal object for a table column
+			// //////////////////////////////////////////////////////////////////////////////
 
-			// Get the actual name of the data field of this table column, which will be our sort property
-			// Using this method will allow multiple tables on the same screen
-			var propertyName = headerContentItem.bindingPath.substring(5);
+			var tableHeader = {};
+
+			// Parse the data binding path to get our id for the header... also known as the data field
+			tableHeader.id = headerContentItem.bindingPath.slice(5);
+
+			// This property will hold which direction we are sorting, ASC, DESC, NULL
+			tableHeader.sortDirection = null;
+
+			// Store the html element for ease of accessibility
+			tableHeader.headerElement = this;
+
+			// Store the original header text, used for adding sort arrows
+			tableHeader.originalHeaderText = $(this).text();
+
+			// Initialize the sort direction
+			tableHeader.sortDirection = null;
+
+			// Initialize the sort position
+			tableHeader.sortPosition = null;
+
+			// Add this item/header to the list of sortable fields
+			me.tableHeaders.push(tableHeader);
+
+			// Add the pointer style to the header element
+			$(tableHeader.headerElement).css('cursor', 'pointer');
 
 			// Add a click handler for each table header
-			$(this).on("click", function () {
+			$(tableHeader.headerElement).on("click", function () {
 
-				// Get the text of the header that was clicked for adding the arrow
-				var text = $(this).text();
+				// Adjust the direction based on the previous direction
+				// Ordering flow is Ascending -> Descending -> no sort
+				switch (tableHeader.sortDirection) {
+					case "ASC":
+						// We were ascending... so change to Descending
+						tableHeader.sortDirection = "DESC";
+						break;
 
-				// The same column has been clicked twice, so reverse the sort order.
-				if (me.lastColumnClicked === this) {
-					text = $(me.lastColumnClicked).data("originalText");
-					me.sortAscending = !me.sortAscending;
+					case "DESC":
+						// We were descending... so change to NULL, no sort
+						tableHeader.sortDirection = null;
+						tableHeader.sortPosition = null;
 
-				} else {
+						// Since we removed a sort item, re-sort the headers based on their sort position
+						me.tableHeaders = _.sortBy(me.tableHeaders, function (item) {
+							return item.sortPosition == null ? 10000 : item.sortPosition;
+						});
+						break;
 
-					// A different table header was clicked than the previous one
-					me.sortAscending = me.initialSortAscending;
+					default:
+						// We were null or undefined, so we go to ascending now
+						tableHeader.sortDirection = "ASC";
+						tableHeader.sortPosition = 1000;
 
-					// Reset the last table header to remove the sort graphic
-					if (me.lastColumnClicked !== undefined) {
-						$(me.lastColumnClicked).html(
-							$(me.lastColumnClicked).data("originalText"));
-					}
+						// Since we added a sort item, re-sort the fields based on their sort position
+						me.tableHeaders = _.sortBy(me.tableHeaders, function (item) {
+							return item.sortPosition == null ? 10000 : item.sortPosition;
+						});
+						break;
 				}
 
-				// Set our properties that will fire off the sort 
-				me.screen[me.sortAscendingPropertyName] = me.sortAscending;
-				me.screen[me.sortPropertyName] = propertyName;
+				// Recalculate the sortPosition property, for use in the header display
+				_.each(me.tableHeaders, function (item, index) {
+					if (item.sortPosition != null) {
+						item.sortPosition = index;
+					}
+				});
 
-				// Apply the sort graphic to this new header location
-				EnhancedTable.applySortGraphic(this, text, me.sortAscending);
+				// If batchMode was sent as true, then don't set the sort, user will do this
+				if (me.batchMode == false) {
+					me.executeSort();
+				}
 
-				// Store the original text of the table header by using the JQuery data api
-				$(this).data("originalText", text);
-
-				// Store this column for comparison with the next click
-				me.lastColumnClicked = this;
+				// Update the headers with the sort information (graphic, position)
+				me.updateTableHeaders();
 
 			});
 
 		});
 	};
-	
+
+
+	// Execute the filter that was defined, used when batchMode is set to true
+	// ==========================================================================================
+	p.executeFilter = function () {
+		var me = this;
+		var result = "";
+
+		// Loop over all the fields in our field container
+		_.each(me.filterFields, function (item) {
+
+			// Remove the first character, which will make our name unique
+			var dataFieldName = item.name.slice(1);
+
+			// Replace all the underscores with dots
+			dataFieldName = dataFieldName.replace('_', '.');
+
+			// What is the value of the field
+			var dataValue = item.value;
+
+			if (dataValue != null && dataValue != "") {
+
+				// Create our predicate
+				result = result + " " + dataFieldName + ".Contains(\"" + dataValue + "\")" + " and";
+
+			}
+
+		});
+
+		// Remove the last character, which is the last comma
+		result = result.slice(0, -4);
+
+		// Add the sort string to the property, which will fire off a query request
+		me.screen[me.filterStringPropertyName] = result;
+	};
+
 
 	// Clear all the input fields, in essence clearing the filter also
 	// ==========================================================================================
 	p.clearFilter = function () {
 		var me = this;
-		
-		// Loop over all the fields in our container
-		for (var i = 0; i < me.filterFields.length; i++) {
+		var result = "";
 
-			// Set the value to undefined to signify blank
-			me.filterFields[i].value = undefined;
+		// Loop over all the fields in our field container
+		_.each(me.filterFields, function (item) {
+
+			// Set the value to null
+			item.value = null;
+
+		});
+
+		// If we are in batch mode
+		if (me.batchMode == true) {
+			// Add the sort string to the property, which will fire off a query request
+			me.screen[me.filterStringPropertyName] = result;
 		}
-
-		// Reset our visual text property
-		me.filterText.value = "";
-
 	};
 
 
@@ -176,37 +256,113 @@ var itgLs = itgLs || {};
 	// ==========================================================================================
 	p.toggleFilterVisibility = function () {
 		var me = this;
-		
+
 		me.filterFieldLayout.isVisible = !me.filterFieldLayout.isVisible;
-		me.clearFilterButton.isVisible = me.filterFieldLayout.isVisible;
-		me.filterText.isVisible = !me.filterFieldLayout.isVisible;
 
 	};
 
 
-	// Update the text in a property field that displays the filter
+	// Set the sort property with the sort string, allows for a batch or single
 	// ==========================================================================================
-	p.updateFilterText = function () {
+	p.executeSort = function () {
+
+		// Who are we... 
 		var me = this;
-		var result = "";
 
-		// Loop over all the fields in our field container
-		for (var i = 0; i < me.filterFields.length; i++) {
+		// Create our a string that will be used for our sort
+		var sortString = "";
+		_.each(me.tableHeaders, function (item) {
+			if (item.sortPosition != undefined && item.sortPosition != null) {
+				sortString += item.id + " " + item.sortDirection + ", ";
+			}
+		});
 
-			// Create the text string for this name/value pair
-			var displayName = me.filterFields[i].displayName;
-			var fieldValue = me.filterFields[i].value;
+		// Remove the last character, which is the last comma
+		sortString = sortString.slice(0, -2);
 
-			// Add to create our big string
-			result += fieldValue === undefined || fieldValue == null || fieldValue === "" ? "" : " -- " + displayName + ": " + fieldValue;
-
-		}
-
-		// Now set the screen propert with our result
-		me.filterText.value = result;
+		// Add the sort string to the property, which will fire off a query request
+		me.screen[me.sortStringPropertyName] = sortString;
 
 	};
+
+
+	// Clear the sort fields, if in batchMode also execute the sort
+	// ==========================================================================================
+	p.clearSort = function () {
+
+		var me = this;
+
+		_.each(me.tableHeaders, function (item) {
+			item.sortPosition = null;
+			item.sortDirection = null;
+		});
+
+		me.executeSort();
+
+		// Update the headers with the sort information (graphic, position)
+		me.updateTableHeaders(me.tableHeaders);
+
+	};
+
+
+	// Update table column headers based on sort properties
+	// ==========================================================================================
+	p.updateTableHeaders = function () {
+		var me = this;
+
+		// loop over our headers
+		_.each(me.tableHeaders, function (item) {
+
+			// If sort position is set, update the header
+			if (item.sortPosition != null) {
+				var graphic = item.sortDirection == "ASC" ? "&#9650" : "&#9660";
+				$(item.headerElement).html(item.originalHeaderText + " - " + (item.sortPosition + 1) + graphic);
+			} else {
+
+				// No sort position, so just show the default text
+				$(item.headerElement).html(item.originalHeaderText);
+			}
+
+
+		});
+	};
+
 
 
 }());
+
+
+// ==========================================================================================
+// Quick little function to convert a standard button to Iconic button
+// Added here for this targeted example, is typically part of the itgLs library
+// ==========================================================================================
+function convertToIconicButton(element, contentItem, icon) {
+
+	// The following icon names are standard with LightSwitch:
+	// ok, cancel, discard, decline, save, logout, back, search, camera, trash, add, remove,
+	// video, tag, gear, contacts, edit, question, refreesh, list, folder, move, text, attachment,
+	// warning, star, addfavorite, filter, sort, addpicture, document, download, calendar, dropdown
+
+	// Create our html items for our button
+	// var $div = $('<div tabindex="-1" class="id-element msls-large-icon ui-btn ui-shadow ui-mini ui-btn-icon-top ui-btn-up-a" data-role="button" data-theme="a" data-iconpos="top" data-mini="true" data-iconshadow="true" data-shadow="true" data-corners="false" data-wrapperEls="span" style="box-shadow: none;"></div>');
+	var $div = $('<div class="id-element msls-large-icon ui-btn ui-shadow ui-mini ui-btn-icon-top ui-btn-up-a" data-theme="a" style="box-shadow: none;"></div>');
+	var $innerButton = $('<span class="ui-btn-inner"></span>');
+	var $textSpan = $('<span class="ui-btn-text">' + contentItem.displayName + '</span>');
+	var $iconSpan = $('<span class="ui-icon ui-icon-msls-' + icon + ' ui-icon-shadow">&nbsp;</span>');
+
+	// Add all of our items under the big div
+	$div.append($innerButton.append($textSpan).append($iconSpan));
+
+	// Add our new button to the element
+	$(element).html($div);
+
+	// Removing the msls-leaf will drop the big padding typically used
+	$(element).closest('.msls-leaf').removeClass('msls-leaf');
+
+	// Bind to the displayName so the text can be dynamically changed
+	contentItem.dataBind('displayName', function (newValue) {
+		$textSpan.text(newValue);
+	});
+
+};
 
